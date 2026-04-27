@@ -168,7 +168,6 @@ export default function GraphPage() {
           ctx.fillText(label, node.x, node.y + NODE_RADIUS + 13)
         }
       }
-      }
     }
 
     let frame = 0
@@ -221,11 +220,6 @@ export default function GraphPage() {
       }
     }
     setHoveredNode(null)
-    canvas.style.cursor = 'default'
-    setTooltip(null)
-  }
-      }
-    }
     canvas.style.cursor = 'default'
     setTooltip(null)
   }
