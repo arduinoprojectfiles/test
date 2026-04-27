@@ -17,11 +17,18 @@ export default function LibraryPage() {
       const [docsData, statsData] = await Promise.all([api.listDocuments(params), api.getStats()])
       setData(docsData)
       setStats(statsData)
-    } catch (e) { console.error(e) }
-    finally { setLoading(false) }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
   }, [statusF])
 
-  useEffect(() => { fetchDocs(); const t = setInterval(fetchDocs, 5000); return () => clearInterval(t) }, [fetchDocs])
+  useEffect(() => {
+    fetchDocs()
+    const t = setInterval(fetchDocs, 5000)
+    return () => clearInterval(t)
+  }, [fetchDocs])
 
   const filtered = (data?.documents || []).filter(d =>
     !filter || d.title.toLowerCase().includes(filter.toLowerCase()) ||
@@ -38,19 +45,31 @@ export default function LibraryPage() {
   const dupBadge = (doc) => {
     if (!doc.dup_status) return null
     const styles = {
-      duplicate:          { background: '#fef2f2', color: '#991b1b', label: '⚠ Duplicate' },
-      possible_duplicate: { background: '#fef3c7', color: '#92400e', label: '~ Similar' },
-      version:            { background: '#eff6ff', color: '#1d4ed8', label: '↑ Version' },
+      duplicate:          { background: '#fef2f2', color: '#991b1b', label: 'Duplicate' },
+      possible_duplicate: { background: '#fef3c7', color: '#92400e', label: 'Similar' },
+      version:            { background: '#eff6ff', color: '#1d4ed8', label: 'Version' },
     }
     const s = styles[doc.dup_status] || styles.possible_duplicate
     return <span style={{ ...s, fontSize: 10.5, padding: '1px 7px', borderRadius: 99, fontWeight: 500 }}>{s.label}</span>
   }
 
+  const DocumentCardSkeleton = () => (
+    <div className="doc-card">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 10 }}>
+        <div className="skeleton skeleton-title" style={{ width: '70%' }} />
+        <div className="skeleton" style={{ width: 60, height: 20 }} />
+      </div>
+      <div className="skeleton skeleton-line" style={{ width: '80%' }} />
+      <div className="skeleton skeleton-line" style={{ width: '90%' }} />
+      <div className="skeleton skeleton-line" style={{ width: '60%' }} />
+    </div>
+  )
+
   return (
     <div>
       <div className="page-header">
         <h2>Library</h2>
-        <p>All ingested documents — click any to explore its content and chunks</p>
+        <p>All ingested documents with processing status and metadata</p>
       </div>
       <div className="page-body">
         {stats && (
@@ -85,13 +104,17 @@ export default function LibraryPage() {
         </div>
 
         {loading ? (
-          <div style={{ padding: '48px 0', display: 'flex', justifyContent: 'center' }}>
-            <div className="spinner" style={{ width: 28, height: 28 }} />
+          <div className="doc-grid">
+            {[...Array(6)].map((_, i) => <DocumentCardSkeleton key={i} />)}
           </div>
         ) : filtered.length === 0 ? (
           <div className="empty-state">
+            <svg className="icon-empty-state" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M4 19.5v-15A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5z" />
+              <polyline points="10 6 10 12 14 12 14 6" />
+            </svg>
             <h3>No documents yet</h3>
-            <p>Upload some papers, reports, or notes to get started.</p>
+            <p>Upload papers, reports, or notes to begin.</p>
             <button className="btn btn-primary" style={{ marginTop: 16 }} onClick={() => navigate('/upload')}>Upload documents</button>
           </div>
         ) : (
@@ -99,7 +122,7 @@ export default function LibraryPage() {
             {filtered.map(doc => (
               <div key={doc.slug} className="doc-card" onClick={() => navigate('/document/' + doc.slug)}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 10 }}>
-                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 16, lineHeight: 1.35, flex: 1 }}>{doc.title}</div>
+                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 600, lineHeight: 1.35, flex: 1 }}>{doc.title}</div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'flex-end', flexShrink: 0 }}>
                     <span className={'badge badge-' + doc.status}>
                       {doc.status === 'processing' && <span className="spinner" style={{ width: 10, height: 10, borderWidth: 1.5 }} />}

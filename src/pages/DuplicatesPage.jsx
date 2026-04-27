@@ -33,8 +33,12 @@ export default function DuplicatesPage() {
           </div>
         ) : groups.length === 0 ? (
           <div className="empty-state">
-            <h3>No duplicates found</h3>
-            <p>Every document appears to be unique. Duplicates are detected automatically on upload.</p>
+            <svg className="icon-empty-state" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <rect x="2" y="4" width="12" height="14" rx="2" />
+              <rect x="10" y="2" width="12" height="14" rx="2" strokeDasharray="3 2" />
+            </svg>
+            <h3>No duplicates detected</h3>
+            <p>All documents are unique or have been automatically detected.</p>
           </div>
         ) : (
           <>
@@ -49,11 +53,11 @@ export default function DuplicatesPage() {
                   <div style={{ padding: '16px 20px', background: 'var(--paper-2)', borderBottom: '1px solid var(--rule)' }}>
                     <div style={{ fontSize: 10.5, textTransform: 'uppercase', letterSpacing: '0.08em',
                                   color: 'var(--ink-3)', marginBottom: 6 }}>Original</div>
-                    <button onClick={() => navigate('/document/' + group.original.slug)}
-                      style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 0, textAlign: 'left', fontFamily: 'var(--font-sans)' }}>
-                      <div style={{ fontFamily: 'var(--font-serif)', fontSize: 16, color: 'var(--ink)', lineHeight: 1.35, marginBottom: 3 }}>
-                        {group.original.title}
-                      </div>
+                  <button onClick={() => navigate('/document/' + group.original.slug)}
+                    style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 0, textAlign: 'left', fontFamily: 'var(--font-sans)' }}>
+                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 600, color: 'var(--ink)', lineHeight: 1.35, marginBottom: 3 }}>
+                      {group.original.title}
+                    </div>
                       {group.original.authors && group.original.authors.length > 0 && (
                         <div style={{ fontSize: 12, color: 'var(--ink-3)' }}>
                           {group.original.authors.slice(0, 3).join(', ')}
@@ -81,9 +85,9 @@ export default function DuplicatesPage() {
                           </div>
                           <button onClick={() => navigate('/document/' + match.slug)}
                             style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 0, textAlign: 'left', fontFamily: 'var(--font-sans)' }}>
-                            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 15, color: 'var(--ink)', lineHeight: 1.35, marginBottom: 3 }}>
-                              {match.title}
-                            </div>
+                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.35, marginBottom: 3 }}>
+                      {dup.title}
+                    </div>
                             {match.authors && match.authors.length > 0 && (
                               <div style={{ fontSize: 12, color: 'var(--ink-3)' }}>
                                 {match.authors.slice(0, 3).join(', ')}

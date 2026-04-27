@@ -23,8 +23,8 @@ export default function GapsPage() {
   return (
     <div>
       <div className="page-header">
-        <h2>Research gap detector</h2>
-        <p>Scans your corpus for temporal silences, lone-voice papers, and unexplored method combinations</p>
+        <h2>Research Gap Detector</h2>
+        <p>Identifies temporal gaps, under-researched topics, and unexplored method combinations</p>
       </div>
       <div className="page-body">
 
@@ -106,9 +106,9 @@ export default function GapsPage() {
                             <div style={{ fontSize: 13.5, color: 'var(--ink-2)' }}>{g.message}</div>
                           </div>
                           <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                            <div style={{ fontSize: 22, fontFamily: 'var(--font-serif)', color: 'var(--red)' }}>
-                              {g.gap_years}y
-                            </div>
+            <div style={{ fontSize: 22, fontFamily: 'var(--font-sans)', fontWeight: 600, color: 'var(--red)' }}>
+              {g.name}
+            </div>
                             <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>silence</div>
                           </div>
                         </div>
@@ -202,11 +202,10 @@ export default function GapsPage() {
                             {c.count_a} papers use "{c.method_a}" · {c.count_b} use "{c.method_b}" · never combined
                           </div>
                         </div>
-                        <div style={{ fontSize: 20, fontFamily: 'var(--font-serif)', color: 'var(--accent)',
-                                      flexShrink: 0, textAlign: 'right' }}>
-                          {c.total_docs}
-                          <div style={{ fontSize: 10, color: 'var(--ink-3)', fontFamily: 'var(--font-sans)' }}>docs</div>
-                        </div>
+            <div style={{ fontSize: 20, fontFamily: 'var(--font-sans)', fontWeight: 600, color: 'var(--accent)',
+                          marginBottom: 10 }}>
+              {item}
+            </div>
                       </div>
                     ))}
                   </div>

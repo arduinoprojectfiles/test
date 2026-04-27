@@ -39,7 +39,7 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <h1>Research<br />Knowledge Base</h1>
+        <h1>Research Knowledge Base</h1>
         <div className="tagline">Local · Private · Connected</div>
       </div>
       <nav className="sidebar-nav">
@@ -49,18 +49,18 @@ function Sidebar() {
         {nav('/upload',     'Upload',           IcoUpload)}
 
         <SectionLabel>Explore</SectionLabel>
-        {nav('/graph',      'Knowledge graph',  IcoGraph)}
+        {nav('/graph',      'Knowledge Graph',  IcoGraph)}
         {nav('/timeline',   'Timeline',         IcoTimeline)}
         {nav('/glossary',   'Glossary',         IcoGlossary)}
-        {nav('/authors',    'Author network',   IcoAuthors)}
+        {nav('/authors',    'Author Network',   IcoAuthors)}
 
         <SectionLabel>Analyse</SectionLabel>
-        {nav('/gaps',       'Research gaps',    IcoGaps)}
+        {nav('/gaps',       'Research Gaps',    IcoGaps)}
         {nav('/duplicates', 'Duplicates',       IcoDup)}
-        {nav('/review',     'PRISMA review',    IcoReview)}
+        {nav('/review',     'PRISMA Review',    IcoReview)}
 
         <SectionLabel>Export</SectionLabel>
-        {nav('/export',     'Export references',IcoExport)}
+        {nav('/export',     'Export References',IcoExport)}
       </nav>
       {stats && (
         <div className="sidebar-stats">

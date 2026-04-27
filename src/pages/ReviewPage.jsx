@@ -97,8 +97,8 @@ export default function ReviewPage() {
   return (
     <div style={{ display: 'flex', height: '100vh', flexDirection: 'column' }}>
       <div className="page-header" style={{ flexShrink: 0 }}>
-        <h2>Systematic review &amp; PRISMA</h2>
-        <p>Screen papers for inclusion, resolve conflicts, and generate PRISMA flow counts</p>
+        <h2>Systematic Review</h2>
+        <p>Screen papers for inclusion and generate PRISMA flow diagrams</p>
       </div>
 
       <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
@@ -147,9 +147,9 @@ export default function ReviewPage() {
         <div style={{ flex: 1, overflowY: 'auto', minWidth: 0 }}>
           {showNewProject ? (
             <div style={{ padding: '32px 48px', maxWidth: 640 }}>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 22, fontWeight: 400, marginBottom: 24 }}>
-                New review project
-              </h3>
+        <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, marginBottom: 24 }}>
+          New project
+        </h3>
               {[
                 { key: 'name',               label: 'Project name *',         rows: 1 },
                 { key: 'question',           label: 'Research question',       rows: 2 },
@@ -185,7 +185,7 @@ export default function ReviewPage() {
               <div style={{ padding: '20px 32px', borderBottom: '1px solid var(--rule)',
                             display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
                 <div>
-                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 20, marginBottom: 4 }}>{p.name}</div>
+                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600, marginBottom: 4 }}>{p.name}</div>
                   {p.question && <div style={{ fontSize: 13, color: 'var(--ink-3)', maxWidth: 600 }}>{p.question}</div>}
                 </div>
                 <button className="btn btn-danger" style={{ fontSize: 12, flexShrink: 0 }}
@@ -249,7 +249,7 @@ export default function ReviewPage() {
                                                     boxShadow: 'var(--shadow)' }}>
                             <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                               <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ fontFamily: 'var(--font-serif)', fontSize: 15,
+                                <div style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500,
                                               color: 'var(--ink)', marginBottom: 4, lineHeight: 1.35,
                                               cursor: 'pointer', textDecoration: 'underline',
                                               textDecorationColor: 'transparent',
@@ -343,7 +343,7 @@ function PRISMAView({ prisma }) {
     <div style={{ background: bg, border: '1px solid var(--rule)', borderRadius: 10,
                   padding: '14px 20px', textAlign: 'center', boxShadow: 'var(--shadow)',
                   minWidth: 160 }}>
-      <div style={{ fontFamily: 'var(--font-serif)', fontSize: 32, color, lineHeight: 1 }}>{count}</div>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 32, fontWeight: 600, color, lineHeight: 1 }}>{count}</div>
       <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>{label}</div>
     </div>
   )
@@ -354,7 +354,7 @@ function PRISMAView({ prisma }) {
 
   return (
     <div style={{ padding: '32px 48px' }}>
-      <div style={{ fontFamily: 'var(--font-serif)', fontSize: 20, marginBottom: 6 }}>PRISMA 2020 flow</div>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600, marginBottom: 6 }}>PRISMA 2020 Flow</div>
       <div style={{ fontSize: 13, color: 'var(--ink-3)', marginBottom: 28 }}>
         Completion: <strong>{prisma.completion_pct}%</strong> screened
       </div>
@@ -375,15 +375,15 @@ function PRISMAView({ prisma }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 80 }}>
           <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 10,
                         padding: '12px 18px', minWidth: 200 }}>
-            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 24, color: '#991b1b' }}>
-              {s.pending}
-            </div>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: '#991b1b' }}>
+                Screening
+              </div>
             <div style={{ fontSize: 12, color: '#991b1b' }}>Pending / not yet screened</div>
           </div>
 
           <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 10,
                         padding: '12px 18px', minWidth: 200 }}>
-            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 24, color: '#991b1b' }}>
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: '#991b1b' }}>
               {s.excluded}
             </div>
             <div style={{ fontSize: 12, color: '#991b1b', marginBottom: 8 }}>Excluded</div>
@@ -398,9 +398,9 @@ function PRISMAView({ prisma }) {
 
           <div style={{ background: '#fef3c7', border: '1px solid #fde68a', borderRadius: 10,
                         padding: '12px 18px', minWidth: 200 }}>
-            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 24, color: '#92400e' }}>
-              {s.maybe}
-            </div>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: '#92400e' }}>
+                Included
+              </div>
             <div style={{ fontSize: 12, color: '#92400e' }}>Awaiting final decision</div>
           </div>
         </div>

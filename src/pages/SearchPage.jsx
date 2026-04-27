@@ -13,7 +13,8 @@ export default function SearchPage() {
   async function doSearch(e) {
     e && e.preventDefault()
     if (!query.trim()) return
-    setLoading(true); setError(null)
+    setLoading(true)
+    setError(null)
     try {
       const data = await api.search(query.trim(), mode)
       setResults(data)
@@ -24,11 +25,27 @@ export default function SearchPage() {
     }
   }
 
+  const SearchResultSkeleton = () => (
+    <div className="skeleton-card">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+        <div style={{ flex: 1 }}>
+          <div className="skeleton skeleton-title" style={{ width: '70%' }} />
+          <div className="skeleton skeleton-line" style={{ width: '40%' }} />
+        </div>
+        <div className="skeleton" style={{ width: 80, height: 20 }} />
+      </div>
+      <div style={{ marginTop: 12 }}>
+        <div className="skeleton skeleton-line" style={{ width: '95%' }} />
+        <div className="skeleton skeleton-line" style={{ width: '90%' }} />
+      </div>
+    </div>
+  )
+
   return (
     <div>
       <div className="page-header">
-        <h2>Search the knowledge base</h2>
-        <p>Find papers, passages, and concepts across your entire corpus</p>
+        <h2>Search</h2>
+        <p>Find papers, passages, and concepts across your corpus</p>
       </div>
       <div className="page-body">
         <form onSubmit={doSearch}>
@@ -41,7 +58,7 @@ export default function SearchPage() {
             </button>
           </div>
           <div className="mode-tabs">
-            {[['hybrid','⚡ Hybrid'],['vector','🔮 Semantic'],['bm25','🔤 Keyword']].map(([m, label]) => (
+            {[['hybrid','Hybrid'],['vector','Semantic'],['bm25','Keyword']].map(([m, label]) => (
               <button key={m} type="button" className={'mode-tab' + (mode === m ? ' active' : '')} onClick={() => setMode(m)}>
                 {label}
               </button>
@@ -54,13 +71,26 @@ export default function SearchPage() {
                         borderRadius: 8, color: '#c0392b', fontSize: 14 }}>{error}</div>
         )}
 
+        {loading && (
+          <div style={{ marginTop: 28 }}>
+            {[...Array(3)].map((_, i) => <SearchResultSkeleton key={i} />)}
+          </div>
+        )}
+
         {results && !loading && (
           <div>
             <div style={{ marginTop: 28, marginBottom: 4, fontSize: 12.5, color: 'var(--ink-3)' }}>
-              {results.total} result{results.total !== 1 ? 's' : ''} for &ldquo;{results.query}&rdquo; — {results.mode} search
+              {results.total} result{results.total !== 1 ? 's' : ''} for "{results.query}" — {results.mode} search
             </div>
             {results.results.length === 0 ? (
-              <div className="no-results"><p>No matching documents found.</p></div>
+              <div className="empty-state">
+                <svg className="icon-empty-state" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <h3>No results found</h3>
+                <p>Try adjusting your search terms or search mode.</p>
+              </div>
             ) : (
               <div className="result-list">
                 {results.results.map(r => (
@@ -106,11 +136,10 @@ export default function SearchPage() {
         {!results && !loading && (
           <div style={{ marginTop: 56, maxWidth: 560 }}>
             <p style={{ fontSize: 13.5, color: 'var(--ink-3)', marginBottom: 16 }}>
-              Hybrid search fans out to both semantic vectors and keyword index simultaneously,
-              then fuses results using Reciprocal Rank Fusion.
+              Hybrid search combines semantic vectors with keyword indexing to find relevant papers and passages.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              {['network meta-analysis','randomised controlled trial','machine learning classification','systematic review methodology'].map(e => (
+              {['network meta-analysis','randomised controlled trial','machine learning','systematic review'].map(e => (
                 <button key={e} className="btn btn-ghost" style={{ fontSize: 12.5 }} onClick={() => setQuery(e)}>{e}</button>
               ))}
             </div>

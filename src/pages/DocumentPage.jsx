@@ -16,14 +16,17 @@ export default function DocumentPage() {
   const PER_PAGE = 10
 
   useEffect(() => {
-    setLoading(true); setTab('overview')
+    setLoading(true)
+    setTab('overview')
     Promise.all([
       api.getDocument(slug),
       api.getDocumentChunks(slug, { limit: PER_PAGE, offset: 0 }),
       api.getDocumentConnections(slug),
       fetch(`/api/annotations/${slug}`).then(r => r.json()),
     ]).then(([d, c, conn, annData]) => {
-      setDoc(d); setChunks(c); setConns(conn)
+      setDoc(d)
+      setChunks(c)
+      setConns(conn)
       setAnnCount((annData.annotations || []).length)
     }).catch(console.error).finally(() => setLoading(false))
   }, [slug])
@@ -50,7 +53,7 @@ export default function DocumentPage() {
 
   const TABS = [
     { key: 'overview',     label: 'Overview' },
-    ...(isPDF || isText ? [{ key: 'viewer', label: isPDF ? '📄 PDF viewer' : '📄 Viewer' }] : []),
+    ...(isPDF || isText ? [{ key: 'viewer', label: isPDF ? 'PDF Viewer' : 'Viewer' }] : []),
     { key: 'annotations',  label: `Annotations (${annCount})` },
     { key: 'chunks',       label: `Chunks (${totalChunks})` },
     { key: 'connections',  label: `Connections (${connList.length})` },
@@ -85,8 +88,6 @@ export default function DocumentPage() {
           ))}
         </div>
       </div>
-
-      {/* Overview */}
       {tab === 'overview' && (
         <div className="page-body">
           <div className="detail-body" style={{ paddingTop: 0, paddingLeft: 0, paddingRight: 0 }}>
@@ -168,8 +169,13 @@ export default function DocumentPage() {
           <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 200px)' }}>
             <div style={{ padding: '8px 24px', background: 'var(--paper-2)',
                           borderBottom: '1px solid var(--rule)', fontSize: 12.5, color: 'var(--ink-3)' }}>
-              Use browser controls to zoom · Ctrl+F to search within PDF
+              Use browser controls to zoom or search within PDF
             </div>
+            <iframe src={`/api/documents/${slug}/file#toolbar=1&view=FitH`}
+              style={{ flex: 1, border: 'none', width: '100%' }} title={doc.title} />
+          </div>
+        ) : <PlainTextViewer url={`/api/documents/${slug}/file`} />
+      )}
             <iframe src={`/api/documents/${slug}/file#toolbar=1&view=FitH`}
               style={{ flex: 1, border: 'none', width: '100%' }} title={doc.title} />
           </div>
@@ -182,9 +188,6 @@ export default function DocumentPage() {
       {/* Chunks */}
       {tab === 'chunks' && (
         <div className="page-body">
-          <p style={{ fontSize: 13, color: 'var(--ink-3)', marginBottom: 20 }}>
-            Each chunk is a semantically coherent passage stored as a separate vector.
-          </p>
           <div className="chunk-list">
             {(chunks?.chunks || []).map(c => (
               <div key={c.id} className="chunk-item">

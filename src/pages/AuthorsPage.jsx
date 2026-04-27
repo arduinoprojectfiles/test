@@ -201,8 +201,8 @@ export default function AuthorsPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <div className="page-header" style={{ flexShrink: 0 }}>
-        <h2>Author collaboration network</h2>
-        <p>Co-authorship graph built from your corpus — amber rings mark bridge authors who connect separate clusters</p>
+        <h2>Author Network</h2>
+        <p>Co-authorship graph showing author connections and collaboration clusters</p>
       </div>
 
       <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
@@ -309,7 +309,7 @@ export default function AuthorsPage() {
             </div>
           ) : (
             <div>
-              <div style={{ fontFamily: 'var(--font-serif)', fontSize: 18, marginBottom: 6,
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 18, fontWeight: 600, marginBottom: 6,
                             lineHeight: 1.3, color: 'var(--ink)' }}>{selNode.id}</div>
               {selNode.is_bridge && (
                 <span style={{ background: '#fef3c7', color: '#92400e',

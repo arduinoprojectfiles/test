@@ -5,7 +5,7 @@ const ACCEPTED = '.pdf,.docx,.doc,.txt,.md,.html,.htm'
 
 export default function UploadPage() {
   const [dragging, setDragging] = useState(false)
-  const [queue, setQueue] = useState([])      // { file, status, slug, error }
+  const [queue, setQueue] = useState([])
   const [uploading, setUploading] = useState(false)
   const inputRef = useRef(null)
 
@@ -29,7 +29,6 @@ export default function UploadPage() {
     if (!queued.length) return
     setUploading(true)
 
-    // Upload in batches of 5
     for (let i = 0; i < queue.length; i += 5) {
       const batch = queue.slice(i, i + 5).filter(item => item.status === 'queued')
       if (!batch.length) continue
@@ -43,7 +42,6 @@ export default function UploadPage() {
           const idx = batchIndices[j]
           if (r.status === 'queued') {
             updateItem(idx, { status: 'processing', slug: r.slug })
-            // Poll for completion
             pollStatus(idx, r.slug)
           } else {
             updateItem(idx, { status: 'error', error: r.reason })
@@ -58,7 +56,7 @@ export default function UploadPage() {
   }
 
   async function pollStatus(itemIndex, slug) {
-    const maxTries = 60  // up to 5 minutes
+    const maxTries = 60
     for (let i = 0; i < maxTries; i++) {
       await sleep(5000)
       try {
@@ -87,8 +85,8 @@ export default function UploadPage() {
   return (
     <div>
       <div className="page-header">
-        <h2>Upload documents</h2>
-        <p>PDF, DOCX, TXT, Markdown, HTML — all processed locally</p>
+        <h2>Upload</h2>
+        <p>Add documents to your knowledge base for processing and indexing</p>
       </div>
 
       <div className="page-body" style={{ maxWidth: 760 }}>
@@ -99,9 +97,9 @@ export default function UploadPage() {
           onDrop={onDrop}
           onClick={() => inputRef.current?.click()}
         >
-          <div className="drop-zone-icon">📄</div>
+          <div className="drop-zone-icon">📤</div>
           <h3>Drop files here to upload</h3>
-          <p>or click to browse · PDF, DOCX, TXT, MD, HTML · up to 100 MB each</p>
+          <p>PDF, DOCX, TXT, Markdown, HTML · up to 100 MB each</p>
           <input
             ref={inputRef}
             type="file"

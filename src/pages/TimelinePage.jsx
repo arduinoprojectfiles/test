@@ -28,8 +28,8 @@ export default function TimelinePage() {
   return (
     <div>
       <div className="page-header">
-        <h2>Research timeline</h2>
-        <p>How topics, methods, and ideas evolved chronologically across your corpus</p>
+        <h2>Research Timeline</h2>
+        <p>How topics and methods evolved chronologically across your corpus</p>
       </div>
       <div className="page-body">
 
@@ -118,10 +118,10 @@ export default function TimelinePage() {
                       style={{ width: '100%', padding: '13px 20px', background: isOpen ? 'var(--accent-2)' : '#fff',
                                border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center',
                                gap: 14, fontFamily: 'var(--font-sans)', transition: 'background 0.12s' }}>
-                      <span style={{ fontFamily: 'var(--font-serif)', fontSize: 20, fontWeight: 400,
-                                     color: isOpen ? 'var(--accent)' : 'var(--ink)', minWidth: 52 }}>
-                        {entry.year ?? 'Undated'}
-                      </span>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600,
+                           color: 'var(--ink)', marginBottom: 8, display: 'block' }}>
+              {t.year}
+            </span>
                       <span style={{ fontSize: 13, color: 'var(--ink-3)' }}>
                         {entry.count} document{entry.count !== 1 ? 's' : ''}
                       </span>
@@ -142,12 +142,10 @@ export default function TimelinePage() {
                                      transition: 'background 0.1s' }}
                             onMouseEnter={e => e.currentTarget.style.background = 'var(--paper-2)'}
                             onMouseLeave={e => e.currentTarget.style.background = ''}>
-                            <div style={{ fontSize: 14, fontFamily: 'var(--font-serif)', color: 'var(--ink)',
-                                          marginBottom: 4, lineHeight: 1.35 }}>{doc.title}</div>
-                            {doc.authors && doc.authors.length > 0 && (
-                              <div style={{ fontSize: 12, color: 'var(--ink-3)', marginBottom: 4 }}>
-                                {doc.authors.slice(0, 3).join(', ')}{doc.authors.length > 3 ? ' et al.' : ''}
-                              </div>
+                <div style={{ fontSize: 14, fontFamily: 'var(--font-sans)', fontWeight: 500, color: 'var(--ink)',
+                              marginBottom: 2 }}>
+                  {doc.title}
+                </div>
                             )}
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                               {(doc.methods || []).slice(0, 2).map(m => (

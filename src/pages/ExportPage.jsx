@@ -52,8 +52,8 @@ export default function ExportPage() {
   return (
     <div>
       <div className="page-header">
-        <h2>Export references</h2>
-        <p>Download your corpus as BibTeX (.bib) for LaTeX or RIS (.ris) for Zotero, Mendeley &amp; EndNote</p>
+        <h2>Export</h2>
+        <p>Export your references in BibTeX or RIS format for use with citation management tools</p>
       </div>
 
       <div className="page-body">
@@ -61,9 +61,9 @@ export default function ExportPage() {
         <div style={{ display: 'flex', gap: 12, marginBottom: 32, flexWrap: 'wrap' }}>
           <div style={{ background: '#fff', border: '1px solid var(--rule)', borderRadius: 12,
                         padding: '20px 24px', flex: 1, minWidth: 220, boxShadow: 'var(--shadow)' }}>
-            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 18, marginBottom: 4 }}>BibTeX</div>
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: 18, fontWeight: 600, marginBottom: 4 }}>BibTeX</div>
             <div style={{ fontSize: 12.5, color: 'var(--ink-3)', marginBottom: 16, lineHeight: 1.6 }}>
-              For LaTeX documents, Overleaf, and any tool that reads <code style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }}>.bib</code> files.
+              For LaTeX documents, Overleaf, and tools that read <code style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }}>.bib</code> files.
             </div>
             <button className="btn btn-primary" onClick={() => doExport('bibtex')} disabled={!!exporting}>
               {exporting === 'bibtex' ? 'Exporting…' : `↓ Export ${exportCount} as .bib`}
@@ -72,10 +72,9 @@ export default function ExportPage() {
 
           <div style={{ background: '#fff', border: '1px solid var(--rule)', borderRadius: 12,
                         padding: '20px 24px', flex: 1, minWidth: 220, boxShadow: 'var(--shadow)' }}>
-            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 18, marginBottom: 4 }}>RIS</div>
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: 18, fontWeight: 600, marginBottom: 4 }}>RIS</div>
             <div style={{ fontSize: 12.5, color: 'var(--ink-3)', marginBottom: 16, lineHeight: 1.6 }}>
               For Zotero, Mendeley, EndNote, and RefWorks.
-              Import directly via <em>File → Import</em> in any reference manager.
             </div>
             <button className="btn btn-primary" onClick={() => doExport('ris')} disabled={!!exporting}>
               {exporting === 'ris' ? 'Exporting…' : `↓ Export ${exportCount} as .ris`}
@@ -134,7 +133,7 @@ export default function ExportPage() {
                   </div>
 
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontFamily: 'var(--font-serif)', fontSize: 14.5, color: 'var(--ink)',
+                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 14.5, fontWeight: 500, color: 'var(--ink)',
                                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {doc.title}
                     </div>

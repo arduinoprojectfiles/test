@@ -206,11 +206,8 @@ export default function GraphPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <div className="page-header" style={{ flexShrink: 0 }}>
-        <h2>Knowledge graph</h2>
-        <p>
-          Every document is a node. Edges form automatically from shared keywords, authors,
-          methods, and semantic similarity. Click a node once to select, twice to open.
-        </p>
+        <h2>Knowledge Graph</h2>
+        <p>Documents connected by shared keywords, authors, methods, and semantic similarity</p>
       </div>
 
       <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
@@ -266,9 +263,9 @@ export default function GraphPage() {
             background: '#fff', overflowY: 'auto', padding: '20px 20px',
             flexShrink: 0,
           }}>
-            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 16, lineHeight: 1.35, marginBottom: 8 }}>
-              {selectedNode.title}
-            </div>
+          <div style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 600, lineHeight: 1.35, marginBottom: 8 }}>
+            {selectedNode.label}
+          </div>
             {selectedNode.authors?.length > 0 && (
               <div style={{ fontSize: 12, color: 'var(--ink-3)', marginBottom: 4 }}>
                 {selectedNode.authors.slice(0, 3).join(', ')}

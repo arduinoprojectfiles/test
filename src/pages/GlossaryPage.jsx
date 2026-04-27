@@ -46,8 +46,8 @@ export default function GlossaryPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 0px)' }}>
       <div className="page-header" style={{ flexShrink: 0 }}>
-        <h2>Concept glossary</h2>
-        <p>Every term, method, and concept extracted from your corpus — living and auto-updated</p>
+        <h2>Concept Glossary</h2>
+        <p>Terms and concepts extracted and organized from your corpus</p>
       </div>
 
       <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
@@ -132,9 +132,9 @@ export default function GlossaryPage() {
         <div style={{ width: 280, flexShrink: 0, overflowY: 'auto', padding: '20px' }}>
           {selected ? (
             <div>
-              <div style={{ fontFamily: 'var(--font-serif)', fontSize: 20, marginBottom: 8, lineHeight: 1.3 }}>
-                {selected.term}
-              </div>
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600, marginBottom: 8, lineHeight: 1.3 }}>
+              {selected.term}
+            </div>
               <div style={{ display: 'flex', gap: 8, marginBottom: 16, alignItems: 'center' }}>
                 <span style={{ ...(TYPE_STYLE[selected.type] || {}), padding: '2px 10px', borderRadius: 99, fontSize: 12 }}>
                   {selected.type}

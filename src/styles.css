@@ -17,9 +17,8 @@
   --green:     #166534;
   --green-bg:  #f0fdf4;
 
-  --font-serif: 'DM Serif Display', Georgia, serif;
-  --font-sans:  'DM Sans', system-ui, sans-serif;
-  --font-mono:  'DM Mono', 'Fira Code', monospace;
+  --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:  'Fira Code', 'Courier New', monospace;
 
   --radius-sm:  4px;
   --radius:     8px;
@@ -64,9 +63,9 @@ body {
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .sidebar-logo h1 {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--paper);
   line-height: 1.3;
   letter-spacing: -0.01em;
@@ -133,9 +132,9 @@ body {
   background: var(--paper);
 }
 .page-header h2 {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 26px;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--ink);
 }
@@ -281,9 +280,9 @@ body {
 .result-card:hover { box-shadow: var(--shadow-md); border-color: #c8c4bc; }
 
 .result-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 17px;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--ink);
   margin-bottom: 6px;
   line-height: 1.35;
@@ -338,9 +337,9 @@ body {
   opacity: 0.4;
 }
 .drop-zone h3 {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 20px;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--ink);
   margin-bottom: 6px;
 }
@@ -380,9 +379,9 @@ body {
   background: var(--paper);
 }
 .detail-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 28px;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--ink);
   line-height: 1.3;
@@ -463,7 +462,7 @@ body {
   color: var(--ink-3);
 }
 .empty-state svg { opacity: 0.2; margin-bottom: 16px; }
-.empty-state h3 { font-family: var(--font-serif); font-weight: 400; font-size: 20px; color: var(--ink-2); margin-bottom: 6px; }
+.empty-state h3 { font-family: var(--font-sans); font-weight: 600; font-size: 20px; color: var(--ink-2); margin-bottom: 6px; }
 .empty-state p { font-size: 13.5px; }
 
 .btn {
@@ -506,7 +505,7 @@ body {
   box-shadow: var(--shadow);
 }
 .stat-card .stat-label { font-size: 11.5px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
-.stat-card .stat-value { font-family: var(--font-serif); font-size: 30px; color: var(--ink); line-height: 1; }
+.stat-card .stat-value { font-family: var(--font-sans); font-size: 30px; font-weight: 600; color: var(--ink); line-height: 1; }
 .stat-card .stat-sub { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
 
 .spinner {
@@ -518,6 +517,10 @@ body {
   flex-shrink: 0;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+@keyframes skeleton-pulse {
+  0%, 100% { background-color: var(--paper-3); }
+  50% { background-color: var(--rule); }
+}
 
 .back-link {
   display: inline-flex;
@@ -544,4 +547,32 @@ mark {
   color: var(--ink);
   border-radius: 2px;
   padding: 0 1px;
+}
+
+.skeleton {
+  background-color: var(--paper-3);
+  border-radius: var(--radius);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-line { height: 14px; margin-bottom: 8px; }
+.skeleton-line:last-child { margin-bottom: 0; }
+.skeleton-title { height: 20px; margin-bottom: 12px; }
+.skeleton-card {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  box-shadow: var(--shadow);
+}
+.skeleton-card .skeleton-line { height: 16px; margin-bottom: 10px; }
+.skeleton-card .skeleton-line:nth-child(3) { width: 80%; }
+.skeleton-card .skeleton-line:nth-child(4) { width: 60%; margin-bottom: 0; }
+
+.icon-empty-state {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 24px;
+  opacity: 0.3;
+  color: var(--ink-3);
 }
