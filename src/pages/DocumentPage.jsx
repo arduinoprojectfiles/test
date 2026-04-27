@@ -176,11 +176,6 @@ export default function DocumentPage() {
           </div>
         ) : <PlainTextViewer url={`/api/documents/${slug}/file`} />
       )}
-            <iframe src={`/api/documents/${slug}/file#toolbar=1&view=FitH`}
-              style={{ flex: 1, border: 'none', width: '100%' }} title={doc.title} />
-          </div>
-        ) : <PlainTextViewer url={`/api/documents/${slug}/file`} />
-      )}
 
       {/* Annotations */}
       {tab === 'annotations' && <AnnotationsPanel documentSlug={slug} />}
