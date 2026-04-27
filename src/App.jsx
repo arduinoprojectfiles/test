@@ -39,7 +39,22 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <h1>Research Knowledge Base</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+          <div style={{
+            width: 36,
+            height: 36,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
+            borderRadius: 8,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '1px solid rgba(255,255,255,0.1)',
+            fontSize: 18,
+          }}>
+            ◆
+          </div>
+          <h1>Research<br />Knowledge Base</h1>
+        </div>
         <div className="tagline">Local · Private · Connected</div>
       </div>
       <nav className="sidebar-nav">
