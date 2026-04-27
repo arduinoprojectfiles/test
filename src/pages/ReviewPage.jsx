@@ -303,7 +303,25 @@ export default function ReviewPage() {
               )}
 
               {/* PRISMA view */}
-              {view === 'prisma' && prisma && <PRISMAView prisma={prisma} />}
+              {view === 'prisma' && prisma && (
+                <div style={{ padding: '32px 48px' }}>
+                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600, marginBottom: 24 }}>PRISMA 2020 Flow</div>
+                  <PRISMADiagram stats={{
+                    records_identified: prisma.stages?.identified || 0,
+                    records_screened: prisma.stages?.screened || 0,
+                    records_excluded: prisma.stages?.excluded || 0,
+                    fulltext_assessed: prisma.stages?.eligible || 0,
+                    fulltext_excluded: (prisma.stages?.excluded || 0) - (prisma.stages?.included || 0),
+                    studies_included: prisma.stages?.included || 0,
+                  }} />
+                  <div style={{ marginTop: 28, padding: '14px 18px', background: 'var(--paper-2)',
+                                border: '1px solid var(--rule)', borderRadius: 10, fontSize: 12.5,
+                                color: 'var(--ink-3)', lineHeight: 1.7 }}>
+                    Counts update in real time as you screen papers. Export your final included set
+                    using the <strong>Export</strong> page (filter to included documents, then download BibTeX or RIS).
+                  </div>
+                </div>
+              )}
 
               {/* Conflicts view */}
               {view === 'conflicts' && (
@@ -331,45 +349,6 @@ export default function ReviewPage() {
             </div>
           )}
         </div>
-      </div>
-    </div>
-  )
-}
-
-function PRISMAView({ prisma }) {
-  const s = prisma.stages || {}
-  const reasons = prisma.exclusion_reasons || {}
-
-  const box = (label, count, color = 'var(--ink)', bg = '#fff') => (
-    <div style={{ background: bg, border: '1px solid var(--rule)', borderRadius: 10,
-                  padding: '14px 20px', textAlign: 'center', boxShadow: 'var(--shadow)',
-                  minWidth: 160 }}>
-              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 32, fontWeight: 600, color, lineHeight: 1 }}>{count}</div>
-      <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>{label}</div>
-    </div>
-  )
-
-  const arrow = () => (
-    <div style={{ textAlign: 'center', fontSize: 20, color: 'var(--ink-3)', padding: '4px 0' }}>↓</div>
-  )
-
-  return (
-    <div style={{ padding: '32px 48px' }}>
-              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600, marginBottom: 24 }}>PRISMA 2020 Flow</div>
-      <PRISMADiagram stats={{
-        records_identified: s.identified,
-        records_screened: s.screened,
-        records_excluded: s.excluded,
-        fulltext_assessed: s.eligible,
-        fulltext_excluded: s.excluded - s.included,
-        studies_included: s.included,
-      }} />
-
-      <div style={{ marginTop: 28, padding: '14px 18px', background: 'var(--paper-2)',
-                    border: '1px solid var(--rule)', borderRadius: 10, fontSize: 12.5,
-                    color: 'var(--ink-3)', lineHeight: 1.7 }}>
-        Counts update in real time as you screen papers. Export your final included set
-        using the <strong>Export</strong> page (filter to included documents, then download BibTeX or RIS).
       </div>
     </div>
   )
