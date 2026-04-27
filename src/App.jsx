@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
 import { api } from './api.js'
+import { useTheme } from './hooks/useTheme.js'
+import CommandPalette from './components/CommandPalette.jsx'
 
 import SearchPage     from './pages/SearchPage.jsx'
 import LibraryPage    from './pages/LibraryPage.jsx'
@@ -74,10 +76,33 @@ function Sidebar() {
 }
 
 export default function App() {
+  const { theme, toggleTheme } = useTheme()
+  const [paletteOpen, setPaletteOpen] = useState(false)
+  const [documents, setDocuments] = useState([])
+
+  useEffect(() => {
+    api.listDocuments({ limit: 100 }).then(d => setDocuments(d.documents || [])).catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setPaletteOpen(o => !o)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
   return (
     <BrowserRouter>
       <div className="app-shell">
         <Sidebar />
+        <button className="theme-toggle" onClick={toggleTheme} title="Toggle dark mode">
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
+        <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} documents={documents} />
         <main className="main-content">
           <Routes>
             <Route path="/"           element={<SearchPage />} />

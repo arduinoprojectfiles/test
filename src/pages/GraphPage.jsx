@@ -14,7 +14,7 @@ export default function GraphPage() {
   const canvasRef = useRef(null)
   const [graph, setGraph] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [selected, setSelected] = useState(null)
+  const [hoveredNode, setHoveredNode] = useState(null)
   const [tooltip, setTooltip] = useState(null)
   const simRef = useRef(null)
   const animRef = useRef(null)
@@ -97,6 +97,27 @@ export default function GraphPage() {
       const ctx = canvas.getContext('2d')
       ctx.clearRect(0, 0, W, H)
 
+      // Draw cluster blobs based on community detection
+      const clusters = {}
+      for (const node of nodes) {
+        const cluster = node.cluster || 'default'
+        if (!clusters[cluster]) clusters[cluster] = []
+        clusters[cluster].push(node)
+      }
+
+      for (const [clusterId, clusterNodes] of Object.entries(clusters)) {
+        if (clusterNodes.length < 3) continue
+        const avgX = clusterNodes.reduce((sum, n) => sum + n.x, 0) / clusterNodes.length
+        const avgY = clusterNodes.reduce((sum, n) => sum + n.y, 0) / clusterNodes.length
+        const radius = Math.max(60, Math.sqrt(clusterNodes.length) * 25)
+
+        ctx.beginPath()
+        ctx.ellipse(avgX, avgY, radius, radius, 0, 0, Math.PI * 2)
+        const clusterColors = ['rgba(45,91,227,0.08)', 'rgba(5,150,105,0.08)', 'rgba(79,70,229,0.08)']
+        ctx.fillStyle = clusterColors[Object.keys(clusters).indexOf(clusterId) % 3]
+        ctx.fill()
+      }
+
       // Draw edges
       for (const edge of edges) {
         const a = nodes.find(n => n.id === edge.source)
@@ -118,6 +139,7 @@ export default function GraphPage() {
       // Draw nodes
       for (const node of nodes) {
         const isSelected = selected === node.id
+        const isHovered = hoveredNode === node.id
         const hasEdge = edges.some(e => e.source === node.id || e.target === node.id)
 
         // Shadow for selected
@@ -137,12 +159,15 @@ export default function GraphPage() {
         ctx.lineWidth = isSelected ? 2.5 : 1.5
         ctx.stroke()
 
-        // Label
-        const label = node.title.length > 22 ? node.title.slice(0, 20) + '…' : node.title
-        ctx.fillStyle = '#1a1916'
-        ctx.font = isSelected ? '500 11px DM Sans, sans-serif' : '400 10px DM Sans, sans-serif'
-        ctx.textAlign = 'center'
-        ctx.fillText(label, node.x, node.y + NODE_RADIUS + 13)
+        // Label (only on hover or selected)
+        if (isSelected || isHovered) {
+          const label = node.title.length > 22 ? node.title.slice(0, 20) + '…' : node.title
+          ctx.fillStyle = 'var(--ink)'
+          ctx.font = isSelected ? '500 11px Inter, sans-serif' : '400 10px Inter, sans-serif'
+          ctx.textAlign = 'center'
+          ctx.fillText(label, node.x, node.y + NODE_RADIUS + 13)
+        }
+      }
       }
     }
 
@@ -156,7 +181,7 @@ export default function GraphPage() {
     animRef.current = requestAnimationFrame(loop)
 
     return () => cancelAnimationFrame(animRef.current)
-  }, [graph, selected])
+  }, [graph, selected, hoveredNode])
 
   function handleCanvasClick(e) {
     const canvas = canvasRef.current
@@ -190,8 +215,15 @@ export default function GraphPage() {
       const dy = node.y - my
       if (Math.sqrt(dx * dx + dy * dy) < NODE_RADIUS + 4) {
         canvas.style.cursor = 'pointer'
+        setHoveredNode(node.id)
         setTooltip({ x: e.clientX, y: e.clientY, node })
         return
+      }
+    }
+    setHoveredNode(null)
+    canvas.style.cursor = 'default'
+    setTooltip(null)
+  }
       }
     }
     canvas.style.cursor = 'default'

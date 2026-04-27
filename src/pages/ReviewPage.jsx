@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { PRISMADiagram } from '../components/PRISMADiagram.jsx'
 
 const DECISIONS = {
   include: { label: 'Include',  bg: '#dcfce7', color: '#166534', border: '#86efac' },
@@ -354,57 +355,15 @@ function PRISMAView({ prisma }) {
 
   return (
     <div style={{ padding: '32px 48px' }}>
-              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600, marginBottom: 6 }}>PRISMA 2020 Flow</div>
-      <div style={{ fontSize: 13, color: 'var(--ink-3)', marginBottom: 28 }}>
-        Completion: <strong>{prisma.completion_pct}%</strong> screened
-      </div>
-
-      <div style={{ display: 'flex', gap: 40, alignItems: 'flex-start' }}>
-        {/* Main flow column */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
-          {box('Records identified', s.identified, 'var(--ink)', 'var(--paper-2)')}
-          {arrow()}
-          {box('Records screened', s.screened)}
-          {arrow()}
-          {box('Reports assessed for eligibility', s.eligible)}
-          {arrow()}
-          {box('Studies included', s.included, '#166534', '#f0fdf4')}
-        </div>
-
-        {/* Side exclusion boxes */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 80 }}>
-          <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 10,
-                        padding: '12px 18px', minWidth: 200 }}>
-              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: '#991b1b' }}>
-                Screening
-              </div>
-            <div style={{ fontSize: 12, color: '#991b1b' }}>Pending / not yet screened</div>
-          </div>
-
-          <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 10,
-                        padding: '12px 18px', minWidth: 200 }}>
-            <div style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: '#991b1b' }}>
-              {s.excluded}
-            </div>
-            <div style={{ fontSize: 12, color: '#991b1b', marginBottom: 8 }}>Excluded</div>
-            {Object.keys(reasons).length > 0 && (
-              <div style={{ fontSize: 11.5, color: '#991b1b' }}>
-                {Object.entries(reasons).slice(0, 5).map(([r, c]) => (
-                  <div key={r}>• {r}: {c}</div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div style={{ background: '#fef3c7', border: '1px solid #fde68a', borderRadius: 10,
-                        padding: '12px 18px', minWidth: 200 }}>
-              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: '#92400e' }}>
-                Included
-              </div>
-            <div style={{ fontSize: 12, color: '#92400e' }}>Awaiting final decision</div>
-          </div>
-        </div>
-      </div>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600, marginBottom: 24 }}>PRISMA 2020 Flow</div>
+      <PRISMADiagram stats={{
+        records_identified: s.identified,
+        records_screened: s.screened,
+        records_excluded: s.excluded,
+        fulltext_assessed: s.eligible,
+        fulltext_excluded: s.excluded - s.included,
+        studies_included: s.included,
+      }} />
 
       <div style={{ marginTop: 28, padding: '14px 18px', background: 'var(--paper-2)',
                     border: '1px solid var(--rule)', borderRadius: 10, fontSize: 12.5,
