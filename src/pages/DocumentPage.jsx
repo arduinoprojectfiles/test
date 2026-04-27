@@ -13,6 +13,9 @@ export default function DocumentPage() {
   const [loading, setLoading]   = useState(true)
   const [chunksPage, setChunksPage] = useState(0)
   const [annCount, setAnnCount] = useState(0)
+  const [annotations, setAnnotations] = useState([])
+  const [selectedAnnotation, setSelectedAnnotation] = useState(null)
+  const [showAnnotationPanel, setShowAnnotationPanel] = useState(false)
   const PER_PAGE = 10
 
   useEffect(() => {
@@ -27,6 +30,7 @@ export default function DocumentPage() {
       setDoc(d)
       setChunks(c)
       setConns(conn)
+      setAnnotations(annData.annotations || [])
       setAnnCount((annData.annotations || []).length)
     }).catch(console.error).finally(() => setLoading(false))
   }, [slug])
@@ -163,18 +167,50 @@ export default function DocumentPage() {
         </div>
       )}
 
-      {/* PDF / text viewer */}
+      {/* PDF / text viewer with annotation panel */}
       {tab === 'viewer' && (
-        isPDF ? (
-          <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 200px)' }}>
-            <div style={{ padding: '8px 24px', background: 'var(--paper-2)',
-                          borderBottom: '1px solid var(--rule)', fontSize: 12.5, color: 'var(--ink-3)' }}>
-              Use browser controls to zoom or search within PDF
+        <div style={{ display: 'flex', height: 'calc(100vh - 200px)', position: 'relative' }}>
+          {isPDF ? (
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+              <div style={{ padding: '8px 24px', background: 'var(--paper-2)',
+                            borderBottom: '1px solid var(--rule)', fontSize: 12.5, color: 'var(--ink-3)' }}>
+                Highlight text to annotate · Annotations appear in the panel on the right
+              </div>
+              <iframe src={`/api/documents/${slug}/file#toolbar=1&view=FitH`}
+                style={{ flex: 1, border: 'none', width: '100%' }} title={doc.title} />
             </div>
-            <iframe src={`/api/documents/${slug}/file#toolbar=1&view=FitH`}
-              style={{ flex: 1, border: 'none', width: '100%' }} title={doc.title} />
+          ) : (
+            <PlainTextViewer url={`/api/documents/${slug}/file`} />
+          )}
+          
+          <div className={`annotation-panel ${showAnnotationPanel ? 'open' : ''}`}>
+            <div className="annotation-panel-header">
+              <div style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 14 }}>Notes</div>
+              <button onClick={() => setShowAnnotationPanel(false)} style={{ 
+                border: 'none', background: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--ink-3)' 
+              }}>×</button>
+            </div>
+            <div className="annotation-panel-content">
+              {annotations.length === 0 ? (
+                <div style={{ color: 'var(--ink-3)', fontSize: 12, textAlign: 'center', paddingTop: 24 }}>
+                  Highlight text in the document to create annotations
+                </div>
+              ) : (
+                annotations.map((ann, i) => (
+                  <div key={i} className="annotation-item">
+                    <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6 }}>
+                      p. {ann.page || '?'}
+                    </div>
+                    <div style={{ fontStyle: 'italic', marginBottom: 6, color: 'var(--ink)' }}>
+                      "{ann.text || ann.highlight}"
+                    </div>
+                    {ann.note && <div>{ann.note}</div>}
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-        ) : <PlainTextViewer url={`/api/documents/${slug}/file`} />
+        </div>
       )}
 
       {/* Annotations */}

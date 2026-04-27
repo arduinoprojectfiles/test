@@ -95,7 +95,24 @@ export default function GraphPage() {
 
     function draw() {
       const ctx = canvas.getContext('2d')
-      ctx.clearRect(0, 0, W, H)
+      
+      // Draw gradient background
+      const gradient = ctx.createLinearGradient(0, 0, W, H)
+      gradient.addColorStop(0, '#faf9f6')
+      gradient.addColorStop(0.5, '#f4f1ea')
+      gradient.addColorStop(1, '#ede9e0')
+      ctx.fillStyle = gradient
+      ctx.fillRect(0, 0, W, H)
+
+      // Draw subtle grid or constellation backdrop
+      ctx.strokeStyle = 'rgba(212, 212, 216, 0.05)'
+      ctx.lineWidth = 0.5
+      for (let i = 0; i < W; i += 100) {
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, H); ctx.stroke()
+      }
+      for (let i = 0; i < H; i += 100) {
+        ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(W, i); ctx.stroke()
+      }
 
       // Draw cluster blobs based on community detection
       const clusters = {}
@@ -109,13 +126,17 @@ export default function GraphPage() {
         if (clusterNodes.length < 3) continue
         const avgX = clusterNodes.reduce((sum, n) => sum + n.x, 0) / clusterNodes.length
         const avgY = clusterNodes.reduce((sum, n) => sum + n.y, 0) / clusterNodes.length
-        const radius = Math.max(60, Math.sqrt(clusterNodes.length) * 25)
+        const radius = Math.max(70, Math.sqrt(clusterNodes.length) * 30)
 
         ctx.beginPath()
         ctx.ellipse(avgX, avgY, radius, radius, 0, 0, Math.PI * 2)
-        const clusterColors = ['rgba(45,91,227,0.08)', 'rgba(5,150,105,0.08)', 'rgba(79,70,229,0.08)']
+        const clusterColors = ['rgba(45,91,227,0.06)', 'rgba(5,150,105,0.06)', 'rgba(79,70,229,0.06)']
         ctx.fillStyle = clusterColors[Object.keys(clusters).indexOf(clusterId) % 3]
         ctx.fill()
+        
+        ctx.strokeStyle = clusterColors[Object.keys(clusters).indexOf(clusterId) % 3].replace('0.06', '0.12')
+        ctx.lineWidth = 0.5
+        ctx.stroke()
       }
 
       // Draw edges
@@ -129,43 +150,56 @@ export default function GraphPage() {
         ctx.lineTo(b.x, b.y)
         ctx.strokeStyle = isSelected
           ? (edge.type === 'semantic' ? '#2d5be3' : '#059669')
-          : (edge.type === 'semantic' ? '#bfdbfe' : '#bbf7d0')
+          : (edge.type === 'semantic' ? '#dbeafe' : '#d1fae5')
         ctx.lineWidth = isSelected ? 2 : Math.max(0.5, edge.weight * 2)
-        ctx.globalAlpha = isSelected ? 0.9 : 0.5
+        ctx.globalAlpha = isSelected ? 0.9 : 0.35
         ctx.stroke()
         ctx.globalAlpha = 1
       }
 
-      // Draw nodes
+      // Draw nodes with glow effect for selected
       for (const node of nodes) {
         const isSelected = selected === node.id
         const isHovered = hoveredNode === node.id
         const hasEdge = edges.some(e => e.source === node.id || e.target === node.id)
 
-        // Shadow for selected
+        // Glow for selected node
         if (isSelected) {
           ctx.beginPath()
-          ctx.arc(node.x, node.y, NODE_RADIUS + 6, 0, Math.PI * 2)
-          ctx.fillStyle = 'rgba(45,91,227,0.15)'
+          ctx.arc(node.x, node.y, NODE_RADIUS + 8, 0, Math.PI * 2)
+          ctx.fillStyle = 'rgba(45,91,227,0.08)'
           ctx.fill()
+          ctx.strokeStyle = 'rgba(45,91,227,0.2)'
+          ctx.lineWidth = 1.5
+          ctx.stroke()
         }
 
-        // Node circle
+        // Node circle with constellation effect
         ctx.beginPath()
         ctx.arc(node.x, node.y, NODE_RADIUS, 0, Math.PI * 2)
-        ctx.fillStyle = isSelected ? '#2d5be3' : (hasEdge ? '#4f46e5' : '#94a3b8')
+        ctx.fillStyle = isSelected ? '#2d5be3' : (hasEdge ? '#4f46e5' : '#9ca3af')
         ctx.fill()
         ctx.strokeStyle = isSelected ? '#1a3fa0' : '#fff'
         ctx.lineWidth = isSelected ? 2.5 : 1.5
         ctx.stroke()
 
+        // Inner detail for visual interest
+        if (!isSelected && hasEdge) {
+          ctx.beginPath()
+          ctx.arc(node.x, node.y, NODE_RADIUS * 0.5, 0, Math.PI * 2)
+          ctx.fillStyle = '#fff'
+          ctx.globalAlpha = 0.6
+          ctx.fill()
+          ctx.globalAlpha = 1
+        }
+
         // Label (only on hover or selected)
         if (isSelected || isHovered) {
           const label = node.title.length > 22 ? node.title.slice(0, 20) + '…' : node.title
           ctx.fillStyle = 'var(--ink)'
-          ctx.font = isSelected ? '500 11px Inter, sans-serif' : '400 10px Inter, sans-serif'
+          ctx.font = isSelected ? '600 11px Inter, sans-serif' : '500 10px Inter, sans-serif'
           ctx.textAlign = 'center'
-          ctx.fillText(label, node.x, node.y + NODE_RADIUS + 13)
+          ctx.fillText(label, node.x, node.y + NODE_RADIUS + 14)
         }
       }
     }

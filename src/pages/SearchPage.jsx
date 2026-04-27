@@ -90,14 +90,30 @@ export default function SearchPage() {
           </div>
 
           {showInstant && instant.length > 0 && (
-            <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 8,
-                         background: 'var(--paper)', border: '1px solid var(--rule)',
-                         borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)',
-                         zIndex: 100 }}>
+            <div className="search-instant-results">
               {instant.map(r => (
-                <button key={r.document_slug} type="button" style={{
-                  width: '100%', padding: '10px 16px', border: 'none', background: 'none',
-                  cursor: 'pointer', textAlign: 'left', borderBottom: '1px solid var(--rule-2)',
+                <button key={r.document_slug} type="button" className="search-instant-result-item"
+                  onClick={() => {
+                    setShowInstant(false)
+                    navigate('/document/' + r.document_slug)
+                  }} >
+                  <div className="search-instant-result-title">{r.title}</div>
+                  <div className="search-instant-result-meta">
+                    {r.authors && r.authors.length > 0 && (
+                      <span>{r.authors.slice(0, 2).join(', ')}{r.authors.length > 2 ? ' et al.' : ''} · </span>
+                    )}
+                    {r.year && <span>{r.year}</span>}
+                  </div>
+                </button>
+              ))}
+              {instant.length > 0 && (
+                <div style={{ padding: '8px 16px', fontSize: 11, color: 'var(--ink-3)', 
+                              borderTop: '1px solid var(--rule-2)', textAlign: 'center' }}>
+                  Press Enter to view all {instant.length}+ results
+                </div>
+              )}
+            </div>
+          )}
                   transition: 'background 0.1s'
                 }}
                   onMouseDown={() => navigate('/document/' + r.document_slug)}
