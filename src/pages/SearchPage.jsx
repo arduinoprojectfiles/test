@@ -1,49 +1,20 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api.js'
 
 export default function SearchPage() {
-  const [query, setQuery]       = useState('')
-  const [mode, setMode]         = useState('hybrid')
-  const [results, setResults]   = useState(null)
-  const [loading, setLoading]   = useState(false)
-  const [error, setError]       = useState(null)
-  const [instant, setInstant]   = useState([])
-  const [showInstant, setShowInstant] = useState(false)
-  const timeoutRef = useRef(null)
+  const [query, setQuery]     = useState('')
+  const [mode, setMode]       = useState('hybrid')
+  const [results, setResults] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError]     = useState(null)
   const navigate = useNavigate()
-
-  useEffect(() => {
-    if (!query.trim()) {
-      setInstant([])
-      setShowInstant(false)
-      return
-    }
-
-    clearTimeout(timeoutRef.current)
-    setLoading(true)
-
-    timeoutRef.current = setTimeout(async () => {
-      try {
-        const data = await api.search(query.trim(), mode)
-        setInstant(data.results?.slice(0, 5) || [])
-        setShowInstant(true)
-        setLoading(false)
-      } catch (err) {
-        setInstant([])
-        setLoading(false)
-      }
-    }, 300)
-
-    return () => clearTimeout(timeoutRef.current)
-  }, [query, mode])
 
   async function doSearch(e) {
     e && e.preventDefault()
     if (!query.trim()) return
     setLoading(true)
     setError(null)
-    setShowInstant(false)
     try {
       const data = await api.search(query.trim(), mode)
       setResults(data)
@@ -77,59 +48,15 @@ export default function SearchPage() {
         <p>Find papers, passages, and concepts across your corpus</p>
       </div>
       <div className="page-body">
-        <form onSubmit={doSearch} style={{ position: 'relative' }}>
+        <form onSubmit={doSearch}>
           <div className="search-wrap">
             <input className="search-input" type="text" value={query}
               onChange={e => setQuery(e.target.value)}
-              onFocus={() => query.trim() && setShowInstant(true)}
-              onBlur={() => setTimeout(() => setShowInstant(false), 200)}
               placeholder="Search by concept, method, author, keyword…" autoFocus />
             <button type="submit" className="search-btn" disabled={loading}>
               {loading ? '…' : 'Search'}
             </button>
           </div>
-
-          {showInstant && instant.length > 0 && (
-            <div className="search-instant-results">
-              {instant.map(r => (
-                <button key={r.document_slug} type="button" className="search-instant-result-item"
-                  onClick={() => {
-                    setShowInstant(false)
-                    navigate('/document/' + r.document_slug)
-                  }} >
-                  <div className="search-instant-result-title">{r.title}</div>
-                  <div className="search-instant-result-meta">
-                    {r.authors && r.authors.length > 0 && (
-                      <span>{r.authors.slice(0, 2).join(', ')}{r.authors.length > 2 ? ' et al.' : ''} · </span>
-                    )}
-                    {r.year && <span>{r.year}</span>}
-                  </div>
-                </button>
-              ))}
-              {instant.length > 0 && (
-                <div style={{ padding: '8px 16px', fontSize: 11, color: 'var(--ink-3)', 
-                              borderTop: '1px solid var(--rule-2)', textAlign: 'center' }}>
-                  Press Enter to view all {instant.length}+ results
-                </div>
-              )}
-            </div>
-          )}
-                  transition: 'background 0.1s'
-                }}
-                  onMouseDown={() => navigate('/document/' + r.document_slug)}
-                  onMouseEnter={e => e.target.style.background = 'var(--paper-2)'}
-                  onMouseLeave={e => e.target.style.background = 'none'}>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink)', marginBottom: 2 }}>
-                    {r.title?.substring(0, 50)}
-                  </div>
-                  <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>
-                    {r.authors?.[0] || 'Unknown'} {r.year ? `· ${r.year}` : ''}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-
           <div className="mode-tabs">
             {[['hybrid','Hybrid'],['vector','Semantic'],['bm25','Keyword']].map(([m, label]) => (
               <button key={m} type="button" className={'mode-tab' + (mode === m ? ' active' : '')} onClick={() => setMode(m)}>

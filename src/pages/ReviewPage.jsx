@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { PRISMADiagram } from '../components/PRISMADiagram.jsx'
 
 const DECISIONS = {
   include: { label: 'Include',  bg: '#dcfce7', color: '#166534', border: '#86efac' },
@@ -303,25 +302,7 @@ export default function ReviewPage() {
               )}
 
               {/* PRISMA view */}
-              {view === 'prisma' && prisma && (
-                <div style={{ padding: '32px 48px' }}>
-                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600, marginBottom: 24 }}>PRISMA 2020 Flow</div>
-                  <PRISMADiagram stats={{
-                    records_identified: prisma.stages?.identified || 0,
-                    records_screened: prisma.stages?.screened || 0,
-                    records_excluded: prisma.stages?.excluded || 0,
-                    fulltext_assessed: prisma.stages?.eligible || 0,
-                    fulltext_excluded: (prisma.stages?.excluded || 0) - (prisma.stages?.included || 0),
-                    studies_included: prisma.stages?.included || 0,
-                  }} />
-                  <div style={{ marginTop: 28, padding: '14px 18px', background: 'var(--paper-2)',
-                                border: '1px solid var(--rule)', borderRadius: 10, fontSize: 12.5,
-                                color: 'var(--ink-3)', lineHeight: 1.7 }}>
-                    Counts update in real time as you screen papers. Export your final included set
-                    using the <strong>Export</strong> page (filter to included documents, then download BibTeX or RIS).
-                  </div>
-                </div>
-              )}
+              {view === 'prisma' && prisma && <PRISMAView prisma={prisma} />}
 
               {/* Conflicts view */}
               {view === 'conflicts' && (
@@ -349,6 +330,87 @@ export default function ReviewPage() {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  )
+}
+
+function PRISMAView({ prisma }) {
+  const s = prisma.stages || {}
+  const reasons = prisma.exclusion_reasons || {}
+
+  const box = (label, count, color = 'var(--ink)', bg = '#fff') => (
+    <div style={{ background: bg, border: '1px solid var(--rule)', borderRadius: 10,
+                  padding: '14px 20px', textAlign: 'center', boxShadow: 'var(--shadow)',
+                  minWidth: 160 }}>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 32, fontWeight: 600, color, lineHeight: 1 }}>{count}</div>
+      <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>{label}</div>
+    </div>
+  )
+
+  const arrow = () => (
+    <div style={{ textAlign: 'center', fontSize: 20, color: 'var(--ink-3)', padding: '4px 0' }}>↓</div>
+  )
+
+  return (
+    <div style={{ padding: '32px 48px' }}>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600, marginBottom: 6 }}>PRISMA 2020 Flow</div>
+      <div style={{ fontSize: 13, color: 'var(--ink-3)', marginBottom: 28 }}>
+        Completion: <strong>{prisma.completion_pct}%</strong> screened
+      </div>
+
+      <div style={{ display: 'flex', gap: 40, alignItems: 'flex-start' }}>
+        {/* Main flow column */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
+          {box('Records identified', s.identified, 'var(--ink)', 'var(--paper-2)')}
+          {arrow()}
+          {box('Records screened', s.screened)}
+          {arrow()}
+          {box('Reports assessed for eligibility', s.eligible)}
+          {arrow()}
+          {box('Studies included', s.included, '#166534', '#f0fdf4')}
+        </div>
+
+        {/* Side exclusion boxes */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 80 }}>
+          <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 10,
+                        padding: '12px 18px', minWidth: 200 }}>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: '#991b1b' }}>
+                Screening
+              </div>
+            <div style={{ fontSize: 12, color: '#991b1b' }}>Pending / not yet screened</div>
+          </div>
+
+          <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 10,
+                        padding: '12px 18px', minWidth: 200 }}>
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: '#991b1b' }}>
+              {s.excluded}
+            </div>
+            <div style={{ fontSize: 12, color: '#991b1b', marginBottom: 8 }}>Excluded</div>
+            {Object.keys(reasons).length > 0 && (
+              <div style={{ fontSize: 11.5, color: '#991b1b' }}>
+                {Object.entries(reasons).slice(0, 5).map(([r, c]) => (
+                  <div key={r}>• {r}: {c}</div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div style={{ background: '#fef3c7', border: '1px solid #fde68a', borderRadius: 10,
+                        padding: '12px 18px', minWidth: 200 }}>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: '#92400e' }}>
+                Included
+              </div>
+            <div style={{ fontSize: 12, color: '#92400e' }}>Awaiting final decision</div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ marginTop: 28, padding: '14px 18px', background: 'var(--paper-2)',
+                    border: '1px solid var(--rule)', borderRadius: 10, fontSize: 12.5,
+                    color: 'var(--ink-3)', lineHeight: 1.7 }}>
+        Counts update in real time as you screen papers. Export your final included set
+        using the <strong>Export</strong> page (filter to included documents, then download BibTeX or RIS).
       </div>
     </div>
   )

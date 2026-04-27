@@ -85,47 +85,19 @@ export default function TimelinePage() {
               )}
             </div>
 
-            {/* Publication Density Chart */}
-            <div className="timeline-chart-container">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                <div style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 14 }}>Publication Density by Year</div>
-                <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>Click a year to explore documents</div>
-              </div>
-              <div className="timeline-bars">
-                {(data.timeline || []).filter(t => t.year).map(t => {
-                  const methodColor = t.dominant_method === 'nlp' ? 'method-nlp' 
-                    : t.dominant_method === 'ml' ? 'method-ml'
-                    : t.dominant_method === 'stats' ? 'method-stats' : ''
-                  return (
-                    <div key={t.year} 
-                      className={`timeline-bar ${methodColor}`}
-                      title={`${t.year}: ${t.count} doc${t.count !== 1 ? 's' : ''} · ${t.dominant_method || 'mixed methods'}`}
-                      style={{
-                        height: Math.max(12, Math.round((t.count / maxCount) * 200)) + 'px',
-                      }}
-                      onClick={() => toggle(t.year)} />
-                  )
-                })}
-              </div>
-              <div style={{ fontSize: 10, color: 'var(--ink-3)', display: 'flex', gap: 16 }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ width: 12, height: 12, background: 'linear-gradient(180deg, #2d5be3 0%, #1e40af 100%)', borderRadius: 2 }} />
-                  General
-                </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ width: 12, height: 12, background: 'linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%)', borderRadius: 2 }} />
-                  NLP
-                </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ width: 12, height: 12, background: 'linear-gradient(180deg, #ec4899 0%, #be185d 100%)', borderRadius: 2 }} />
-                  Machine Learning
-                </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ width: 12, height: 12, background: 'linear-gradient(180deg, #06b6d4 0%, #0e7490 100%)', borderRadius: 2 }} />
-                  Statistics
-                </span>
-              </div>
-            </div>
+            {/* Bar chart */}
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, marginBottom: 32,
+                          borderBottom: '1px solid var(--rule)', paddingBottom: 8, height: 80 }}>
+              {(data.timeline || []).filter(t => t.year).map(t => (
+                <div key={t.year} title={`${t.year}: ${t.count} doc${t.count !== 1 ? 's' : ''}`}
+                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flex: 1, minWidth: 0, cursor: 'pointer' }}
+                  onClick={() => toggle(t.year)}>
+                  <div style={{
+                    width: '100%', minWidth: 4,
+                    height: Math.round((t.count / maxCount) * 52) + 4,
+                    background: expanded[t.year] ? 'var(--accent)' : 'var(--paper-3)',
+                    border: '1px solid ' + (expanded[t.year] ? 'var(--accent-dk)' : 'var(--rule)'),
+                    borderRadius: '3px 3px 0 0', transition: 'background 0.15s',
                   }} />
                   <div style={{ fontSize: 9, color: 'var(--ink-3)', writingMode: 'vertical-lr',
                                 transform: 'rotate(180deg)', height: 24, overflow: 'hidden' }}>
