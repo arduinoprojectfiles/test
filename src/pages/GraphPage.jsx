@@ -238,7 +238,7 @@ export default function GraphPage() {
 
       <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
         {/* Canvas */}
-        <div style={{ flex: 1, position: 'relative', background: '#faf9f6' }}>
+        <div style={{ flex: 1, position: 'relative', background: 'var(--paper)' }}>
           {loading ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 12, color: 'var(--ink-3)' }}>
               <div className="spinner" style={{ width: 24, height: 24 }} />
@@ -263,7 +263,7 @@ export default function GraphPage() {
           {graph?.nodes.length > 0 && (
             <div style={{
               position: 'absolute', bottom: 16, left: 16,
-              background: '#fff', border: '1px solid var(--rule)',
+              background: 'var(--paper)', border: '1px solid var(--rule)',
               borderRadius: 8, padding: '10px 14px', fontSize: 12,
               color: 'var(--ink-3)', display: 'flex', gap: 16,
             }}>
@@ -286,7 +286,7 @@ export default function GraphPage() {
         {selectedNode && (
           <div style={{
             width: 280, borderLeft: '1px solid var(--rule)',
-            background: '#fff', overflowY: 'auto', padding: '20px 20px',
+            background: 'var(--paper)', overflowY: 'auto', padding: '20px 20px',
             flexShrink: 0,
           }}>
           <div style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 600, lineHeight: 1.35, marginBottom: 8 }}>
